@@ -6,6 +6,9 @@
 - [Typescript](#TS)
 - [Issue solving](#issues)
 
+# Use
+
+
 # <a name="JS"> Javascript
 ## Install (for js)
 ```
@@ -71,6 +74,12 @@ Insert this default config into the file
   ]
 } 
 ```
+    
+finally Install Codelyzer
+
+```
+npm i codelyzer
+```
 
 # <a name='issues'></a> Issue solving
 
@@ -95,4 +104,10 @@ You should at least have a different Error (or it might work...)
 You might have missed the step:
 ```
 npx eslint --init
+```
+    
+# Error: Codelyzer missing...
+yeah... you have to install it first:
+```
+npm i codelyzer
 ```
