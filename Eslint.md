@@ -43,3 +43,28 @@ Your .eslintrc.{js,yml,json} configuration file will also include the line:
 ```
 
 Because of this line, all of the rules marked "✓" on the rules page will be turned on. Alternatively, you can use configurations that others have created by searching for "eslint-config" on [npmjs.com](npmjs.com). ESLint will not lint your code unless you extend from a shared configuration or explicitly turn rules on in your configuration.
+
+## Issue solving
+
+# Error: "Failed to load th TSLint Library..."
+Install tslint again in repo and reopen, happened in VS Code
+
+# Error: Not using the local TSLint version...
+"Not using the local TSLint version found for 'c:/Users/manue/Documents/GitHub/CAS_FE_Project2_learnWithIndexCards/LearnWithIndexCards/src/app/app.component.ts'
+To enable code execution from the current workspace you must enable workspace library execution.tslint(1)"
+
+As decribed on [stackoverflow](https://stackoverflow.com/questions/65228384/tslint-extension-throwing-errors-in-my-angular-application-running-in-visual-stu) you have to do the following steps:
+
+1. In VS Code hit Ctrl + shift + P
+2. Enter TSLint: Manage workspace library execution" in the popup + Enter
+3. Select submenu "enable workspace library execution" and hit Enter
+
+You should at least have a different Error (or it might work...)
+
+# Error: Cannot read tslint configuration...
+"Cannot read tslint configuration - 'Failed to load c:\Users\manue\Documents\GitHub\CAS_FE_Project2_learnWithIndexCards\LearnWithIndexCards\tslint.json: Could not find custom rule directory: node_modules/codelyzer'tslint(1)"
+
+You might have missed the step:
+```
+npx eslint --init
+```
