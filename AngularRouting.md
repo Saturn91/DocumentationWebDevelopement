@@ -97,6 +97,38 @@ const routes: Routes = [
 })
 export class AppRoutingModule { }
 ```
+# Read url parameters and pass them from within the application
+As for any other route create a route in a given routing module
+```
+{ path: 'learn', component: LearnComponent }
+```
+
+Add a function witch on trigger navigates to this route and passes a url parameter
+```
+this.router.navigate(['../learn'], { queryParams: { id: 'myTestId' } });
+```
+
+In the then routed to component read the passed url parameter
+```
+@Component({
+  selector: 'app-learn',
+  templateUrl: './learn.component.html',
+  styleUrls: ['./learn.component.scss']
+})
+export class LearnComponent implements OnInit {
+
+  private id = '';
+  
+  constructor(
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit(): void {
+    this.id = this.route.snapshot.queryParams.id;
+    alert(id);
+  }
+}
+```
 
 # Add Link and route with parameters
 ## Setup a route with a parameter
