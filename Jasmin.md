@@ -71,6 +71,47 @@ it('should private property "id" should have value "saturn91"', () => {
   expect(myClass['id'].toBe('saturn91');
 });
 ```
+# Check if html elements are rendered and have the right content
+1. Create a private variable within the tests context
+2. In before each query for those elements after rendering
+3. In the test function read out the properties needed 
+
+```ts
+[...]
+let titleH1: HTMLElement | null;
+let linkElement: HTMLElement[];
+
+[...]
+
+beforeEach(() => {
+    fixture = TestBed.createComponent(LinkListComponent);
+    component = fixture.componentInstance;
+    component.linkListContainer = new LinkListContainer('Title', [
+      new ListLink('link1', 'route1'),
+      new ListLink('link2', 'route2')
+    ]);
+    fixture.detectChanges();
+    const hostElement = (fixture.nativeElement as HTMLElement);
+    titleH1 = hostElement.querySelector('h1');
+    linkElement = [];
+    hostElement.querySelectorAll('a').forEach((element) => {
+      linkElement.push(element);
+    });
+});
+```
+## readout innert text content of an element
+```ts
+it('should have correct title', () => {
+    expect(titleH1?.textContent).toEqual('Title');
+  });
+```
+
+## readout outer html (in this example to ckeck if a link is set properly
+```ts
+it('should have contain link', () => {
+  expect(linkElement[0].outerHTML).toContain('route1');
+});
+```
 
 # Inject Angular services and override them
 As you do testing of Angular components you might have to inject services like your database service which in you app would actually call the backend. Something which should not be done during automated testing! To avoid such time consuming test behaviour and to make sure any failing test is caused by the component it is testing and not by external elements (decoupeling!) you can inject mockup classes instead of the real ones.
