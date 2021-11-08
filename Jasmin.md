@@ -64,3 +64,107 @@ After all tests have run you should get a message like bellow displayed of corse
 ...
 TOTAL: 60 SUCCESS
 ```
+
+# Read private variable within class
+```ts
+it('should private property "id" should have value "saturn91"', () => {
+  expect(myClass['id'].toBe('saturn91');
+});
+```
+
+# Inject Angular services and override them
+As you do testing of Angular components you might have to inject services like your database service which in you app would actually call the backend. Something which should not be done during automated testing! To avoid such time consuming test behaviour and to make sure any failing test is caused by the component it is testing and not by external elements (decoupeling!) you can inject mockup classes instead of the real ones.
+
+## Identify what services you have to inject.
+Lets look at an example component of one of our current projects
+```ts
+@Component({
+  selector: 'app-learn',
+  templateUrl: './learn.component.html',
+  styleUrls: ['./learn.component.scss']
+})
+export class LearnComponent implements OnInit {
+
+  private id = '';
+  public stack: undefined | IndexCardStack = undefined;
+
+  constructor(
+    private route: ActivatedRoute,
+    private stackStorageService: StackStorageService
+  ) { }
+
+  ngOnInit(): void {
+    this.id = this.route.snapshot.queryParams.id;
+    this.stackStorageService.getDocument(this.id).then((stack: IndexCardStack) => {
+      this.stack = stack;
+    });
+  }
+}
+```
+You can see in the constructor there are to external services passed as parameters. In angular this means that the are provided in the module or in the root. If we want to decouple our test we have to mockup those two services. 
+
+## Lets look at what we have to replace:
+we find 4 relevant lines in ngInit in which methodes and properties of this provided services are used:
+```ts
+this.id = this.route.snapshot.queryParams.id;
+this.stackStorageService.getDocument(this.id).then((stack: IndexCardStack) => {
+  this.stack = stack;
+});
+```
+So we want to controll the value and behaviour of this methodes and properties during the test. Lets do that
+
+## create mockup classes
+What we will actually do is to replace the two identified classes with so called mockup classes. This are a barebones fassade of the real classes but deliever the data and behaviour we need during the test.
+The two beloow specified classes will do that during our test. Notice that they only provide the functions and properties which we actually need in this specific test. For mor sufisticated services alternativly you could extend the original class and override the needed function or implement a interface which represents the original class.
+```ts
+describe('LearnComponent', () => {
+  let component: LearnComponent;
+  let fixture: ComponentFixture<LearnComponent>;
+
+  class MockupAuthService {
+      public snapshot = {
+        queryParams: {
+          id: 'test'
+        }
+      };
+    }
+    class MockupStorage {
+      public getDocument(id: string): Promise<IndexCardStack> {
+        return new Promise((resolve) => {
+          resolve(new IndexCardStack([], new IndexCardStackMetaData('', '', '', id, StackVisibility.Undef, '')));
+        });
+      }
+    }
+    
+    [...]
+}
+```
+
+Finally we have to tell the Angular component to actually use this Mockup classes instead of the original ones
+```ts
+describe('LearnComponent', () => {
+  let component: LearnComponent;
+  let fixture: ComponentFixture<LearnComponent>;
+
+  class MockupAuthService {
+   [...]    
+  }
+  class MockupStorage {
+     [...]
+  }
+    
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [ LearnComponent ],
+      providers: [
+        { provide: ActivatedRoute, useClass: MockupAuthService},
+        { provide: StackStorageService, useClass: MockupStorage}
+      ]
+    })
+    .compileComponents();
+  });
+  
+  [...]
+}
+```
+Now we can run our tests and se if it works
