@@ -63,6 +63,13 @@ Lots of different devices have different performance abilities and different lev
 
 ```
 
+## CSS
+1. use simple classes (header__button instead of header button)
+2. optimize css split and make sure they get loaded when needed
+3. (most modern frameworks are already optimized)
+4. identify critical css and implement i.e. as inline css and then load rest later
+5. Checkout: https://github.com/addyosmani/critical
+
 ## Load only what you need / Lazy loading
 If you open a website on your mobile, even the huge invisible part of the website with your 20 images gets loaded even if the 20 images are not yet displayed. This can be optimized
 We should load everything lazy, it is not always faisable. It is not aplicable in each browser... react and angular might handle it differently.
@@ -81,3 +88,14 @@ Give yourself a Target to achieve. I.e. I want to load the page within 1s. I wan
 - look into sub setting
 - load font as defer or async
 - checkout https://github.com/typekit
+
+# Analyse your project
+- https://www.webpagetest.org/
+
+# Tipps
+- repositioning (animations) should be done with transformations not top/left/down/right
+- checkout CDN for further optimisation (server side rendering / caching)
+- caching data which is not rerendered
+- https://perf.rocks/
+- gatsby.js framework
+- if react than next.js
