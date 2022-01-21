@@ -11,7 +11,7 @@ The bellow code is a modification of the code sandbox and in my eyes the minimum
 
 I suggest to organize the project as follows:
 
---src
+```--src
   |--main.tsx
   |--app.tsx (ass shown bellow but function Home and so one are replaced by HomeModule...
   |--app.router.tsx --> all routes
@@ -30,6 +30,7 @@ I suggest to organize the project as follows:
            |    |--globaly used components (like header)
            |--reducers
            |    |--globaly used reducers
+```
 
 main.tsx
 ```TS
